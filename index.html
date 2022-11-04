@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo do 21 - Vue.JS</title>
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="shortcut icon" href="assets/favicon.png" type="image/png">
+</head>
+<body>
+    <div class="container text-center" id="app">
+        <h1 class="text-center">Jogo do 21 com Vue.js</h1>
+        <div class="row text-center mt-4">
+            <div :class="['col-6','players', playerIsActive == 1 ? 'active' : '']">
+                <img src="assets/player1.png" alt="player1">
+                <h6>Player1</h5>
+                <span>
+                    <strong>Nº jogadas:</strong> {{numberHistoricPlayer1}} -
+                    <strong>Pontuação:</strong> {{player1.points}}
+                </span>
+                
+            </div>
+            <div :class="['col-6','players', playerIsActive == 2 ? 'active' : '']">
+                <img src="assets/player2.png" alt="player2">
+                <h6>Player2</h5>
+                <span>
+                    <strong>Nº jogadas:</strong> {{numberHistoricPlayer2}} -
+                    <strong>Pontuação:</strong> {{player2.points}}
+                </span>
+            </div>
+            <div class="controls text-center col-12">
+                <a href="#" class="btn btn-success" @click.prevent="changePlayers">Pular</a>
+                <a href="#" class="btn btn-primary" @click.prevent="resetGame">Resetar</a>
+                <a href="#" class="btn btn-danger" @click.prevent="finishGame">Finalizar</a>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-6">
+                <a href="#" @click.prevent="selectedCarts">
+                    <img src="assets/baralho-cartas.png" class="carts" alt="Baralho Cartas">
+                </a>
+            </div>
+            <div class="col-6">
+                <div v-if="cartSelected != '' ">
+                    <a href="">
+                        <img :src="'assets/carts/'+cartSelected+'.png'" class="carts" alt="Baralho Cartas">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./vue.js"></script>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                playerIsActive: 1,
+                player1:{
+                    points: 0,
+                    historic: []
+                },
+                player2:{
+                    points: 0,
+                    historic: []
+                },
+                cartSelected: ''
+            },
+            methods: {
+                changePlayers(){
+                    this.playerIsActive = this.playerIsActive == 1 ? 2 : 1
+                    this.cartSelected = ''
+                },
+                selectedCarts(){
+                    this.cartSelected = Math.floor((Math.random() * 13) + 1)
+                    alert(this.cartSelected)
+                    
+                    if(this.playerIsActive == 1){
+                        this.player1.points += this.cartSelected
+                        this.player1.historic.push(this.cartSelected)
+                    }                        
+
+                    if(this.playerIsActive == 2){
+                        this.player2.points += this.cartSelected
+                        this.player2.historic.push(this.cartSelected)
+                    }
+                    
+
+                    if(this.player1.points >= 21 || this.player2.points >= 21)
+                        this.finishGame()
+                    
+                },
+                
+                finishGame(){
+                    if(this.player1.points <= 21 && this.player1.points > this.player2.points){
+                        alert('Player 1 é o grande campeão!!!')
+                    } 
+
+                    else if(this.player2.points <= 21 && this.player2.points > this.player1.points){
+                        alert('Player 2 é o grande campeão')
+                    }  
+                    
+                    else if(this.player1.points > 21){
+                        alert('Player 2 é o grande campeão')
+                    }                        
+                    
+                    else if(this.player2.points > 21){
+                        alert('Player 1 é o grande campeão')
+                    }                        
+                    
+                    else{
+                        alert('Empatados')
+                        
+                    }
+
+                    
+                    this.resetGame() 
+                    //ou pode usar setTimeout:
+                    // let vm = this
+                    // setTimeout(function(){
+                    //     vm.resetGame()
+                    // }, 2000)
+                        
+                },
+
+                resetGame(){
+                    this.player1.points = 0
+                    this.player2.points = 0
+                    this.playerIsActive = 1
+                    this.cartSelected = ''
+                    this.player1.historic = []
+                    this.player2.historic = []
+                }
+            },
+            computed:{
+                numberHistoricPlayer1(){
+                    return this.player1.historic.length
+                },
+
+                numberHistoricPlayer2(){
+                    return this.player2.historic.length
+                }
+            }
+        })
+    </script>
+</body>
+</html>

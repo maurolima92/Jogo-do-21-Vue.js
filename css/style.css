@@ -1,0 +1,28 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+h1{
+    font-size: 60px;
+    margin-bottom: 70px;
+    color: #d9534f;
+}
+.img{
+    max-width: 100%;
+}
+img.carts{
+    max-width: 160px;
+}
+img.cart{
+    max-width: 145px;
+}
+
+.players img{
+    background: white;
+    border-radius: 50%;
+    padding: 10px;
+}
+.players.active img{
+    background: #5cb85c!important;
+}
+
